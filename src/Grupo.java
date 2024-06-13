@@ -2,18 +2,18 @@ import java.io.*;
 import java.util.*;
 
 public class Grupo implements Ouvinte {
-    String nome;
-    String descricao;
+    private String nome;
+    private String descricao;
 
-    List<Usuario> membros;
+    private List<Usuario> membros;
 
     public Grupo() {
         membros = new ArrayList<>();
     }
 
-    public Grupo(String nome, String descricao) {
+    public Grupo(String nome, String descricao) throws GrupoExcecao{
         this();
-        this.nome = nome;
+        setNome(nome);
         this.descricao = descricao;
     }
 
@@ -29,8 +29,14 @@ public class Grupo implements Ouvinte {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws GrupoExcecao{
+        GrupoExcecao.verificarNomeVazioOuNulo(nome);
+
         this.nome = nome;
+    }
+
+    public List<Usuario> getMembros() {
+        return membros;
     }
 
     public void adicionarMembro(Usuario membro) {
@@ -53,8 +59,6 @@ public class Grupo implements Ouvinte {
     public void exportarCSV() {
         try {
             String[] nomeArquivo = nome.replace(",", "").replace(".", "").replace(";", "").split(" ");
-
-            System.out.println();
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("output/%s.csv", String.join("", nomeArquivo)), true));
 
@@ -101,6 +105,7 @@ public class Grupo implements Ouvinte {
         } catch (IOException | UsuarioExcecao e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public String toString() {
