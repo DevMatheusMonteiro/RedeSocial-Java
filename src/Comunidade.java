@@ -3,15 +3,15 @@ import java.util.*;
 public class Comunidade implements Ouvinte {
     private String nome;
     private String descricao;
-    List<Grupo> grupos;
+    private List<Grupo> grupos;
 
     public Comunidade() {
         grupos = new ArrayList<>();
     }
 
-    public Comunidade(String nome, String descricao) {
+    public Comunidade(String nome, String descricao) throws ComunidadeExcecao {
         this();
-        this.nome = nome;
+        setNome(nome);
         this.descricao = descricao;
     }
 
@@ -27,8 +27,13 @@ public class Comunidade implements Ouvinte {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws ComunidadeExcecao {
+        ComunidadeExcecao.verificarNomeVazioOuNulo(nome);
         this.nome = nome;
+    }
+
+    public List<Grupo> getGrupos() {
+        return grupos;
     }
 
     public void adicionarGrupo(Grupo grupo) {
@@ -43,7 +48,7 @@ public class Comunidade implements Ouvinte {
         List<String> emails = new ArrayList<>();
 
         for(int i = 0; i < grupos.size(); i++) {
-            for(Usuario membro : grupos.get(i).membros){
+            for(Usuario membro : grupos.get(i).getMembros()){
                 if(!emails.contains(membro.getEmail())){
                     emails.add(membro.getEmail());
                 }
@@ -58,7 +63,7 @@ public class Comunidade implements Ouvinte {
 
         for(int i = 0; i < grupos.size(); i++) {
             if(i != 0) {
-                for(Usuario membro : grupos.get(i).membros){
+                for(Usuario membro : grupos.get(i).getMembros()){
                     if(!emails.contains(membro.getEmail())){
                         emails.add(membro.getEmail());
                         membro.receber(mensagem);
@@ -66,7 +71,7 @@ public class Comunidade implements Ouvinte {
                 }
             } else{
                 grupos.get(i).receber(mensagem);
-                for(Usuario membro : grupos.get(i).membros) {
+                for(Usuario membro : grupos.get(i).getMembros()) {
                     emails.add(membro.getEmail());
                 }
             }

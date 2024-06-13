@@ -42,8 +42,8 @@ public abstract class Usuario implements Emissor, Ouvinte {
 
     public void notificar(Ouvinte ouvinte, String mensagem) {
         if (ouvinte == null ||
-            ((ouvinte instanceof Grupo) && ((Grupo) ouvinte).membros.isEmpty()) ||
-            ((ouvinte instanceof Comunidade) && ((Comunidade) ouvinte).grupos.isEmpty())) {
+            ((ouvinte instanceof Grupo) && ((Grupo) ouvinte).getMembros().isEmpty()) ||
+            ((ouvinte instanceof Comunidade) && ((Comunidade) ouvinte).getGrupos().isEmpty())) {
             return;
         }
         ouvinte.receber(mensagem);
