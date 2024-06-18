@@ -43,10 +43,8 @@ public class Comunidade implements Ouvinte {
     public void removerGrupo(Grupo grupo) {
         grupos.remove(grupo);
     }
-
     public int quantidadeMembros() {
         List<String> emails = new ArrayList<>();
-
         for(int i = 0; i < grupos.size(); i++) {
             for(Usuario membro : grupos.get(i).getMembros()){
                 if(!emails.contains(membro.getEmail())){
@@ -54,13 +52,11 @@ public class Comunidade implements Ouvinte {
                 }
             }
         }
-
         return emails.size();
     }
 
     public void receber(String mensagem) {
         List<String> emails = new ArrayList<>();
-
         for(int i = 0; i < grupos.size(); i++) {
             if(i != 0) {
                 for(Usuario membro : grupos.get(i).getMembros()){
@@ -69,7 +65,7 @@ public class Comunidade implements Ouvinte {
                         membro.receber(mensagem);
                     }
                 }
-            } else{
+            } else {
                 grupos.get(i).receber(mensagem);
                 for(Usuario membro : grupos.get(i).getMembros()) {
                     emails.add(membro.getEmail());

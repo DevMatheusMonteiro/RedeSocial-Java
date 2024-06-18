@@ -7,10 +7,16 @@ public abstract class Usuario implements Emissor, Ouvinte {
     private String email;
     private String senha;
 
+    public Usuario() {}
+
     public Usuario(String email, String nome, String senha) throws UsuarioExcecao {
         setEmail(email);
         setNome(nome);
         setSenha(senha);
+    }
+
+    public boolean equals(Object usuario) {
+        return this.email.equals(((Usuario) usuario).getEmail());
     }
 
     public String getEmail() {
