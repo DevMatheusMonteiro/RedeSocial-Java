@@ -37,7 +37,7 @@ public class Grupo implements Ouvinte {
         return membros;
     }
     public void adicionarMembro(Usuario membro) throws GrupoExcecao{
-        GrupoExcecao.verificaMembroExistente(membros, membro);
+        GrupoExcecao.verificarMembroExistente(membros, membro);
         membros.add(membro);
     }
 

@@ -1,8 +1,6 @@
-import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
         try {
@@ -45,11 +43,17 @@ public class Main {
         }
         return grupo;
     }
-    static void adicionarMembro(Grupo grupo, Usuario usuario){
+    static void adicionarMembro(Grupo grupo, Usuario usuario) throws UsuarioExcecao {
         try {
             grupo.adicionarMembro(usuario);
         } catch (GrupoExcecao e){
             System.out.println(e.getMessage());
+            for (Usuario membro : grupo.getMembros()){
+                if(membro.equals(usuario)) {
+                    usuario.setNome(membro.getNome());
+                    break;
+                }
+            }
         }
     }
     static String entrarTexto(String mensagem) {
@@ -69,7 +73,6 @@ public class Main {
             }
         } while (true);
     }
-
     static void entrarNomeUsuario(Usuario usuario) {
         do {
             try {

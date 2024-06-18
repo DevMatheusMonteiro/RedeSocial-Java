@@ -44,32 +44,34 @@ public class Comunidade implements Ouvinte {
         grupos.remove(grupo);
     }
     public int quantidadeMembros() {
-        List<String> emails = new ArrayList<>();
+        List<Usuario> membros = new ArrayList<>();
         for(int i = 0; i < grupos.size(); i++) {
-            for(Usuario membro : grupos.get(i).getMembros()){
-                if(!emails.contains(membro.getEmail())){
-                    emails.add(membro.getEmail());
+            if(i == 0){
+                membros.addAll(grupos.get(i).getMembros());
+            } else {
+                for (Usuario usuario : grupos.get(i).getMembros()) {
+                    if(!membros.contains(usuario)){
+                        membros.add(usuario);
+                    }
                 }
             }
         }
-        return emails.size();
+        return membros.size();
     }
 
     public void receber(String mensagem) {
-        List<String> emails = new ArrayList<>();
+        List<Usuario> membros = new ArrayList<>();
         for(int i = 0; i < grupos.size(); i++) {
             if(i != 0) {
                 for(Usuario membro : grupos.get(i).getMembros()){
-                    if(!emails.contains(membro.getEmail())){
-                        emails.add(membro.getEmail());
+                    if(!membros.contains(membro)){
+                        membros.add(membro);
                         membro.receber(mensagem);
                     }
                 }
             } else {
                 grupos.get(i).receber(mensagem);
-                for(Usuario membro : grupos.get(i).getMembros()) {
-                    emails.add(membro.getEmail());
-                }
+                membros.addAll(grupos.get(i).getMembros());
             }
         }
     }
