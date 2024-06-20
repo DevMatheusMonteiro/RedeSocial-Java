@@ -8,6 +8,7 @@ Uma rede social voltada para comunicação por mensagens.
 - Gravação/Leitura de dados em arquivos CSV
 - Tratamento de exeções
 - Coleções
+- Streams
 
 
 
