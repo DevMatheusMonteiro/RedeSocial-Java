@@ -1,12 +1,13 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Comunidade implements Ouvinte {
     private String nome;
     private String descricao;
-    private List<Grupo> grupos;
+    private Map<String,Grupo> grupos;
 
     public Comunidade() {
-        grupos = new ArrayList<>();
+        grupos = new HashMap<>();
     }
 
     public Comunidade(String nome, String descricao) throws ComunidadeExcecao {
@@ -32,48 +33,27 @@ public class Comunidade implements Ouvinte {
         this.nome = nome;
     }
 
-    public List<Grupo> getGrupos() {
+    public Map<String,Grupo> getGrupos() {
         return grupos;
     }
 
     public void adicionarGrupo(Grupo grupo) {
-        grupos.add(grupo);
+        grupos.put(grupo.getNome(),grupo);
     }
 
-    public void removerGrupo(Grupo grupo) {
-        grupos.remove(grupo);
+    public void removerGrupo(String nome) {
+        grupos.remove(nome);
     }
     public int quantidadeMembros() {
-        List<Usuario> membros = new ArrayList<>();
-        for(int i = 0; i < grupos.size(); i++) {
-            if(i == 0){
-                membros.addAll(grupos.get(i).getMembros());
-            } else {
-                for (Usuario usuario : grupos.get(i).getMembros()) {
-                    if(!membros.contains(usuario)){
-                        membros.add(usuario);
-                    }
-                }
-            }
-        }
+        Set<Usuario> membros = new HashSet<>();
+        grupos.values().forEach(grupo -> membros.addAll(grupo.getMembros().values()));
         return membros.size();
     }
 
     public void receber(String mensagem) {
-        List<Usuario> membros = new ArrayList<>();
-        for(int i = 0; i < grupos.size(); i++) {
-            if(i != 0) {
-                for(Usuario membro : grupos.get(i).getMembros()){
-                    if(!membros.contains(membro)){
-                        membros.add(membro);
-                        membro.receber(mensagem);
-                    }
-                }
-            } else {
-                grupos.get(i).receber(mensagem);
-                membros.addAll(grupos.get(i).getMembros());
-            }
-        }
+        Set<Usuario> membros = new HashSet<>();
+        grupos.values().forEach(grupo -> membros.addAll(grupo.getMembros().values()));
+        membros.forEach(m -> m.receber(mensagem));
     }
 
     public String toString() {

@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -11,20 +12,20 @@ public class Main {
             Pessoal usuario2 = new Pessoal("ana.amelia@javeiros.com","Ana Amélia", "123","888.888.888-88");
             Pessoal usuario3 = new Pessoal("jose.neto@javeiros.com","José Neto", "123","777.777.777-77");
             Usuario usuario4 = criarUsuario();
+            adicionarMembro(grupo1, usuario4);
             adicionarMembro(grupo1, usuario1);
             adicionarMembro(grupo1, usuario2);
-            adicionarMembro(grupo1, usuario4);
             adicionarMembro(grupo2, usuario1);
             adicionarMembro(grupo2, usuario3);
             adicionarMembro(grupo2, usuario4);
             comunidade.adicionarGrupo(grupo1);
             comunidade.adicionarGrupo(grupo2);
-            usuario1.notificar(comunidade, "Salve, salve, galera!");
-            usuario4.notificar(grupo1, "Olá, javeiros!");
+            comunidade.getGrupos().get(grupo1.getNome()).getMembros().get(usuario1.getEmail()).notificar(comunidade, "Salve, salve, galera!");
+            grupo1.getMembros().get(usuario4.getEmail()).notificar(grupo1, "Olá, javeiros!");
             grupo1.exportarCSV();
             grupo2.exportarCSV();
             System.out.println("Quantidade de membros: " + comunidade.quantidadeMembros());
-        } catch (GrupoExcecao e){
+        } catch (GrupoExcecao e) {
             e.printStackTrace();
         } catch (ComunidadeExcecao e){
             e.printStackTrace();
@@ -43,18 +44,8 @@ public class Main {
         }
         return grupo;
     }
-    static void adicionarMembro(Grupo grupo, Usuario usuario) throws UsuarioExcecao {
-        try {
-            grupo.adicionarMembro(usuario);
-        } catch (GrupoExcecao e){
-            System.out.println(e.getMessage());
-            for (Usuario membro : grupo.getMembros()){
-                if(membro.equals(usuario)) {
-                    usuario.setNome(membro.getNome());
-                    break;
-                }
-            }
-        }
+    static void adicionarMembro(Grupo grupo, Usuario usuario) {
+        grupo.adicionarMembro(usuario);
     }
     static String entrarTexto(String mensagem) {
         Scanner sc = new Scanner(System.in);
@@ -66,8 +57,7 @@ public class Main {
             try {
                 Scanner sc = new Scanner(System.in);
                 System.out.print(mensagem);
-                int numero = sc.nextInt();
-                return numero;
+                return sc.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Formato inválido!");
             }

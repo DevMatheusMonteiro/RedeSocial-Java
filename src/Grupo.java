@@ -5,10 +5,10 @@ public class Grupo implements Ouvinte {
     private String nome;
     private String descricao;
 
-    private List<Usuario> membros;
+    private Map<String,Usuario> membros;
 
     public Grupo() {
-        membros = new ArrayList<>();
+        membros = new HashMap<>();
     }
 
     public Grupo(String nome, String descricao) throws GrupoExcecao{
@@ -30,24 +30,24 @@ public class Grupo implements Ouvinte {
     }
     public void setNome(String nome) throws GrupoExcecao{
         GrupoExcecao.verificarNomeVazioOuNulo(nome);
-
         this.nome = nome;
     }
-    public List<Usuario> getMembros() {
+    public Map<String,Usuario> getMembros() {
         return membros;
     }
-    public void adicionarMembro(Usuario membro) throws GrupoExcecao{
-        GrupoExcecao.verificarMembroExistente(membros, membro);
-        membros.add(membro);
-    }
 
-    public void removerMembro(Usuario membro) {
-        membros.remove(membro);
+    public void adicionarMembro(Usuario membro) {
+        if(!membros.containsKey(membro.getEmail())){
+            membros.put(membro.getEmail(), membro);
+        }
+    }
+    public void removerMembro(String email) {
+        membros.remove(email);
     }
 
     public void receber(String mensagem) {
         if(!membros.isEmpty()) {
-            for (Usuario membro : membros) {
+            for (Usuario membro : membros.values()) {
                 membro.receber(mensagem);
             }
         }
@@ -59,7 +59,7 @@ public class Grupo implements Ouvinte {
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("output/%s.csv", String.join("", nomeArquivo).toLowerCase())));
 
-            for (Usuario membro : membros) {
+            for (Usuario membro : membros.values()) {
                 if (membro instanceof Pessoal){
                     bw.append("Pessoal" +
                             "," + membro.getEmail() +
@@ -91,9 +91,9 @@ public class Grupo implements Ouvinte {
                 colunas = linha.split(",");
 
                 if (colunas[0].equals("Pessoal")){
-                    membros.add(new Pessoal(colunas[1], colunas[2], colunas[3], colunas[4]));
+                    membros.put(colunas[1],new Pessoal(colunas[1], colunas[2], colunas[3], colunas[4]));
                 } else {
-                    membros.add(new Comercial(colunas[1], colunas[2], colunas[3], colunas[4]));
+                    membros.put(colunas[1],new Comercial(colunas[1], colunas[2], colunas[3], colunas[4]));
                 }
             }
 

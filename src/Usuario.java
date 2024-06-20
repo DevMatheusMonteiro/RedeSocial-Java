@@ -1,6 +1,7 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public abstract class Usuario implements Emissor, Ouvinte {
     private String nome;
@@ -15,8 +16,15 @@ public abstract class Usuario implements Emissor, Ouvinte {
         setSenha(senha);
     }
 
-    public boolean equals(Object usuario) {
-        return this.email.equals(((Usuario) usuario).getEmail());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(getEmail(), usuario.getEmail());
+    }
+
+    public int hashCode() {
+        return Objects.hashCode(getEmail());
     }
 
     public String getEmail() {
